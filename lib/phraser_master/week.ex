@@ -23,6 +23,11 @@ defmodule PhraserMaster.Week do
     }
   end
 
+  def slack_username_changeset(week, params) do
+    week
+    |> cast(params, [:slack_username])
+  end
+
   defp choose_tribe do
     index =
       PhraserMaster.Date.unix_week!()

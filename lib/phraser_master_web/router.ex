@@ -23,6 +23,7 @@ defmodule PhraserMasterWeb.Router do
   scope "/slack", PhraserMasterWeb do
     pipe_through(:api)
 
-    post("/whoisphraser", PhraserController, :show)
+    post("/phraser", PhraserController, :show)
+    post("/setphraser", PhraserController, :create)
   end
 end
