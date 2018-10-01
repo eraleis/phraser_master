@@ -5,10 +5,21 @@ defmodule PhraserMaster.Date do
   end
 
   def unix_week!(datetime) do
-    datetime
+    %DateTime{
+      year: datetime.year,
+      month: datetime.month,
+      day: datetime.day,
+      zone_abbr: "CET",
+      hour: 0,
+      minute: 0,
+      second: 0,
+      utc_offset: 3600,
+      std_offset: 0,
+      time_zone: "Europe/Paris"
+    }
     |> DateTime.to_unix()
     |> Kernel./(604_800)
-    |> Kernel.trunc()
+    |> Kernel.round()
   end
 
   def monday do
