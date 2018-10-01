@@ -18,6 +18,7 @@ defmodule PhraserMasterWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :index)
+    get("/redirect", PageController, :redirect)
   end
 
   scope "/slack", PhraserMasterWeb do
