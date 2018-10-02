@@ -23,6 +23,9 @@ config :phraser_master, PhraserMasterWeb.Endpoint,
 config :phraser_master, PhraserMaster.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
+  username: System.get_env("DATABASE_USERNAME"),
+  password: System.get_env("DATABASE_PASSWORD"),
+  hostname: System.get_env("DATABASE_HOST"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
 
