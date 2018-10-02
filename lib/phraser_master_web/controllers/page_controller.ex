@@ -10,6 +10,8 @@ defmodule PhraserMasterWeb.PageController do
       HTTPoison.post!(
         "https://slack.com/api/oauth.access?client_id=444615955152.445166545268&client_secret=cd93a287816c37ddbf7600d0758e4abf&code=#{
           params["code"]
+        }&redirect_uri=#{
+          PhraserMasterWeb.Router.Helpers.page_url(PhraserMasterWeb.Endpoint, :redirect)
         }",
         "",
         [{"Content-type", "application/x-www-form-urlencoded"}]
