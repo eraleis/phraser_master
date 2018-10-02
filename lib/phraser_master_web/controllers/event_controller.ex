@@ -4,6 +4,6 @@ defmodule PhraserMasterWeb.EventController do
   def create(conn, params) do
     spawn(PhraserMaster.EventMatcher, :process_event, [params])
 
-    text(conn, "")
+    text(conn, params["challenge"] || "")
   end
 end
