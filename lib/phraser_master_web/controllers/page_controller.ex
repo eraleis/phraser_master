@@ -15,6 +15,8 @@ defmodule PhraserMasterWeb.PageController do
         [{"Content-type", "application/x-www-form-urlencoded"}]
       )
 
+    IO.inspect(response)
+
     decoded_response = Poison.decode!(response.body)
 
     case Map.take(Poison.decode!(response.body), ["ok"]) do
