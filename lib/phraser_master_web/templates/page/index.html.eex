@@ -1,4 +1,4 @@
-<a href="https://slack.com/oauth/authorize?scope=commands&client_id=444615955152.445166545268&redirect_uri=<%= redirect_uri() %>">
+<a href="https://slack.com/oauth/authorize?scope=commands,bot&client_id=444615955152.445166545268&redirect_uri=<%= redirect_uri() %>">
   <img
     alt="Add to Slack"
     height="40"
