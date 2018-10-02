@@ -1,11 +1,20 @@
 defmodule PhraserMaster.EventMatcher do
+  require Logger
+
   def process_event(payload) do
+    log_event(payload)
+
     with :ok <- human_event?(payload),
          true <- match_phraser_question(payload["event"]["text"]) do
       PhraserMaster.Repo.current_week!()
       |> phraser_response(payload["event"]["channel"])
       |> send_message()
     end
+  end
+
+  defp log_event(payload) do
+    Logger.info("Event received:")
+    Logger.info(inspect(payload))
   end
 
   defp human_event?(payload) do
@@ -41,13 +50,19 @@ defmodule PhraserMaster.EventMatcher do
   end
 
   defp send_message(message) do
-    HTTPoison.post!(
-      "https://slack.com/api/chat.postMessage",
-      Poison.encode!(message),
-      [
-        {"Content-type", "application/json"},
-        {"Authorization", "Bearer xoxb-444615955152-448280715271-Eke3rbqw42y6u4OA5ITK4jdl"}
-      ]
-    )
+    IO.puts("HTTPOISON SEND REQUEEEEEST")
+
+    res =
+      HTTPoison.post!(
+        "https://slack.com/api/chat.postMessage",
+        Poison.encode!(message),
+        [
+          {"Content-type", "application/json"},
+          # TODO: dynamic apps will hold the token and weeks will be linked to those apps
+          {"Authorization", "Bearer xoxb-444615955152-448280715271-7loGcjXGGOy4qOznvOH0aClL"}
+        ]
+      )
+
+    IO.inspect(res)
   end
 end
