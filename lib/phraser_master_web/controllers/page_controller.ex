@@ -17,16 +17,27 @@ defmodule PhraserMasterWeb.PageController do
         [{"Content-type", "application/x-www-form-urlencoded"}]
       )
 
-    IO.inspect(response)
-
     decoded_response = Poison.decode!(response.body)
 
-    case Map.take(Poison.decode!(response.body), ["ok"]) do
+    case Map.take(decoded_response, ["ok"]) do
       %{"ok" => true} ->
-        text(conn, "Successfuly added to your slack app.")
+        create_or_update_team(decoded_response)
+        text(conn, "Successfuly added to your slack team.")
 
       _ ->
         text(conn, "Oups, there is an error: #{decoded_response["error"]}")
+    end
+  end
+
+  defp create_or_update_team(decoded_response) do
+    case PhraserMaster.Repo.get_by(PhraserMaster.Team, team_id: decoded_response["team_id"]) do
+      nil ->
+        PhraserMaster.Team.new(decoded_response)
+        |> PhraserMaster.Repo.insert()
+
+      team ->
+        PhraserMaster.Team.changeset(team, decoded_response)
+        |> PhraserMaster.Repo.update()
     end
   end
 end

@@ -8,7 +8,7 @@ defmodule PhraserMaster.EventMatcher do
          true <- match_phraser_question(payload["event"]["text"]) do
       PhraserMaster.Repo.current_week!()
       |> phraser_response(payload["event"]["channel"])
-      |> send_message()
+      |> send_message(payload)
     end
   end
 
@@ -28,7 +28,7 @@ defmodule PhraserMaster.EventMatcher do
   end
 
   defp match_phraser_question(text) do
-    ~r/.*(lequel|qui|who|il.*y.*a|y.*a.*t.*il|is.*there).*(phraser).*\?.*/
+    ~r/.*(lequel|qui|who|il.*y.*a|y.*a.*t.*il|is.*there).*(phraser).*\?.*/i
     |> Regex.match?(text)
   end
 
@@ -49,8 +49,8 @@ defmodule PhraserMaster.EventMatcher do
     }
   end
 
-  defp send_message(message) do
-    IO.puts("HTTPOISON SEND REQUEEEEEST")
+  defp send_message(message, slack_payload) do
+    team = PhraserMaster.Repo.get_by(PhraserMaster.Team, team_id: slack_payload["team_id"])
 
     res =
       HTTPoison.post!(
@@ -58,8 +58,7 @@ defmodule PhraserMaster.EventMatcher do
         Poison.encode!(message),
         [
           {"Content-type", "application/json"},
-          # TODO: dynamic apps will hold the token and weeks will be linked to those apps
-          {"Authorization", "Bearer xoxb-444615955152-448280715271-7loGcjXGGOy4qOznvOH0aClL"}
+          {"Authorization", "Bearer #{team.bot_access_token}"}
         ]
       )
 
