@@ -4,9 +4,11 @@ defmodule PhraserMaster.EventMatcher do
   def process_event(payload) do
     log_event(payload)
 
+    team = PhraserMaster.Repo.get_by(PhraserMaster.Team, team_id: payload["team_id"])
+
     with :ok <- human_event?(payload),
          true <- match_phraser_question(payload["event"]["text"]) do
-      PhraserMaster.Repo.current_week!()
+      PhraserMaster.Repo.current_week!(team)
       |> phraser_response(payload["event"]["channel"])
       |> send_message(payload)
     end

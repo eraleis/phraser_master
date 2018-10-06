@@ -1,29 +1,33 @@
 defmodule PhraserMasterWeb.PhraserController do
   use PhraserMasterWeb, :controller
 
-  def show(conn, _params) do
+  def show(conn, params) do
+    team = PhraserMaster.Repo.get_by(PhraserMaster.Team, team_id: params["team_id"])
+
     response =
-      PhraserMaster.Repo.current_week!()
+      PhraserMaster.Repo.current_week!(team)
       |> phraser_response()
 
     json(conn, response)
   end
 
   def create(conn, params) do
+    team = PhraserMaster.Repo.get_by(PhraserMaster.Team, team_id: params["team_id"])
+
     response =
       params["text"]
-      |> set_weekly_phraser()
+      |> set_weekly_phraser(team)
       |> setphraser_response()
 
     json(conn, response)
   end
 
-  defp set_weekly_phraser(""),
+  defp set_weekly_phraser("", team),
     do: {:error, "You must specify a slack username.\nex: `/setphraser @slack_username`"}
 
-  defp set_weekly_phraser(username) do
+  defp set_weekly_phraser(username, team) do
     changeset =
-      PhraserMaster.Repo.current_week!()
+      PhraserMaster.Repo.current_week!(team)
       |> PhraserMaster.Week.slack_username_changeset(%{slack_username: username})
       |> PhraserMaster.Repo.update()
   end

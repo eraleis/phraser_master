@@ -12,6 +12,8 @@ defmodule PhraserMaster.Team do
     field(:bot_user_id, :string)
     field(:bot_access_token, :string)
 
+    has_many(:weeks, PhraserMaster.Week)
+
     timestamps()
   end
 

@@ -11,11 +11,14 @@ defmodule PhraserMaster.Week do
     field(:start_at, :date)
     field(:end_at, :date)
 
+    belongs_to(:team, PhraserMaster.Team)
+
     timestamps()
   end
 
-  def new do
+  def new(team_id) do
     %__MODULE__{
+      team_id: team_id,
       number: PhraserMaster.Date.unix_week!(),
       tribe: choose_tribe(),
       start_at: PhraserMaster.Date.monday(),
